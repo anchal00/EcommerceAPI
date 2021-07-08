@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 
 @Entity
@@ -32,6 +33,20 @@ public class User {
 	@JsonIgnore
     private Cart cart;
 	
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@Column(nullable = false)
+	private String password;
+
+	
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public Cart getCart() {
 		return cart;
 	}

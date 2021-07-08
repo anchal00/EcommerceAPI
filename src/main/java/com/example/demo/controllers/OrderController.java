@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import com.example.demo.model.persistence.User;
 import com.example.demo.model.persistence.UserOrder;
@@ -28,14 +29,14 @@ public class OrderController {
 	
 	
 	@PostMapping("/submit/{username}")
-	public ResponseEntity<UserOrder> submit(@PathVariable String username) {
+	public ResponseEntity<Map<String,UserOrder>> submit(@PathVariable String username) {
 		User user = userRepository.findByUsername(username);
 		if(user == null) {
 			return ResponseEntity.notFound().build();
 		}
 		UserOrder order = UserOrder.createFromCart(user.getCart());
 		orderRepository.save(order);
-		return ResponseEntity.ok(order);
+		return ResponseEntity.ok(Map.of("Order Success", order));
 	}
 	
 	@GetMapping("/history/{username}")
