@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers(HttpMethod.GET, AUTH_WHITELIST).permitAll();
+        http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll();
         http.cors().and().csrf().disable()
                 .authorizeRequests().antMatchers(HttpMethod.POST, Constants.SIGN_UP_PATH)
                 .permitAll().anyRequest().authenticated()
