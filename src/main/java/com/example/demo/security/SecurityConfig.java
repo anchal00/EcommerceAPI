@@ -22,6 +22,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private static final String[] AUTH_WHITELIST = {
+        // -- swagger ui
+        "/swagger-resources/**", 
+        "/swagger-ui.html", 
+        "/v2/api-docs", 
+        "/webjars/**" ,
+        "/", 
+        "/h2/**"
+    };
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.parentAuthenticationManager(authenticationManagerBean()).userDetailsService(userDetailsServiceImpl)
@@ -30,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/", "/h2/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.GET, AUTH_WHITELIST).permitAll();
         http.cors().and().csrf().disable()
                 .authorizeRequests().antMatchers(HttpMethod.POST, Constants.SIGN_UP_PATH)
                 .permitAll().anyRequest().authenticated()

@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,7 +34,7 @@ public class OrderController {
 	
 	
 	@PostMapping("/submit/{username}")
-	public ResponseEntity<Map<String,UserOrder>> submit(@PathVariable String username) {
+	public ResponseEntity<Map<String,UserOrder>> submit(@PathVariable String username, @RequestHeader("Authorization") String authToken) {
 		User user = userRepository.findByUsername(username);
 		if(user == null) {
 			log.error("order cannot be placed , invalid user");
@@ -47,7 +48,7 @@ public class OrderController {
 	}
 	
 	@GetMapping("/history/{username}")
-	public ResponseEntity<List<UserOrder>> getOrdersForUser(@PathVariable String username) {
+	public ResponseEntity<List<UserOrder>> getOrdersForUser(@PathVariable String username, @RequestHeader("Authorization") String authToken) {
 		User user = userRepository.findByUsername(username);
 		if(user == null) {
 			return ResponseEntity.notFound().build();

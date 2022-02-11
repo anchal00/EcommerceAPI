@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,7 +35,8 @@ public class CartController {
 	private ItemRepository itemRepository;
 
 	@PostMapping("/addToCart")
-	public ResponseEntity<Cart> addTocart(@RequestBody ModifyCartRequest request) {
+	public ResponseEntity<Cart> addTocart(@RequestBody ModifyCartRequest request,
+										  @RequestHeader("Authorization") String authToken) {
 		User user = userRepository.findByUsername(request.getUsername());
 		if (user == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -50,7 +52,8 @@ public class CartController {
 	}
 
 	@PostMapping("/removeFromCart")
-	public ResponseEntity<Cart> removeFromcart(@RequestBody ModifyCartRequest request) {
+	public ResponseEntity<Cart> removeFromcart(@RequestBody ModifyCartRequest request,
+												@RequestHeader("Authorization") String authToken) {
 		User user = userRepository.findByUsername(request.getUsername());
 		if (user == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
