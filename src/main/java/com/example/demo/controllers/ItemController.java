@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.persistence.Item;
 import com.example.demo.model.persistence.repositories.ItemRepository;
+import com.example.demo.utils.GlobalConstants;
 
 @RestController
-@RequestMapping("/api/item")
+@RequestMapping(GlobalConstants.ECOMMERCE_API_ENDPOINT + GlobalConstants.ITEM_RESOURCES_PATH)
 public class ItemController {
 
 	@Autowired

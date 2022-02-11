@@ -2,6 +2,8 @@ package com.example.demo.controllers;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +20,13 @@ import com.example.demo.model.persistence.User;
 import com.example.demo.model.persistence.repositories.CartRepository;
 import com.example.demo.model.persistence.repositories.UserRepository;
 import com.example.demo.model.requests.CreateUserRequest;
+import com.example.demo.utils.GlobalConstants;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping(GlobalConstants.ECOMMERCE_API_ENDPOINT + GlobalConstants.USER_RESOURCE_PATH)
 public class UserController {
+
+	private final Logger log = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	private UserRepository userRepository;
@@ -45,19 +50,21 @@ public class UserController {
 
 	@PostMapping("/create")
 	public ResponseEntity<User> createUser(@RequestBody CreateUserRequest createUserRequest) {
+		if (!isUserRequestValid(createUserRequest)) {
+			log.error("cannot create the user");
+			return ResponseEntity.badRequest().build();
+		}
 		User user = new User();
 		user.setUsername(createUserRequest.getUsername());
 		Cart cart = new Cart();
 		cartRepository.save(cart);
 		user.setCart(cart);
 
-		if (!isUserRequestValid(createUserRequest)) {
-			return ResponseEntity.badRequest().build();
-		}
-
 		user.setPassword(bCryptPasswordEncoder.encode(createUserRequest.getPassword()));
 
 		userRepository.save(user);
+
+		log.info("User Created Successfully with username " + user.getUsername());
 
 		return ResponseEntity.ok(user);
 	}

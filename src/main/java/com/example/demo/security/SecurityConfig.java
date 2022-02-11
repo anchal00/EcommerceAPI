@@ -31,10 +31,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/", "/h2/**").permitAll();
-        http.cors().and().csrf().disable().authorizeRequests().antMatchers(HttpMethod.POST, Constants.SIGN_UP_PATH)
-                .permitAll().anyRequest().authenticated().and().addFilter(new AuthFilter(authenticationManager()))
-                .addFilter(new AuthVerificationFilter(authenticationManager())).sessionManagement()
+        http.cors().and().csrf().disable()
+                .authorizeRequests().antMatchers(HttpMethod.POST, Constants.SIGN_UP_PATH)
+                .permitAll().anyRequest().authenticated()
+                .and()
+                .addFilter(new AuthFilter(authenticationManager()))
+                .addFilter(new AuthVerificationFilter(authenticationManager()))
+                .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                
         http.headers().frameOptions().disable();
 
         
